@@ -26,7 +26,7 @@ html {
 body {
   font-family: "Open Sans", sans-serif;
   font-weight: 400;
-  background: repeat url("../images/image.png");
+  background: repeat url("../../../../../ONL_SJE_S_84_ScrumLab/src/main/webapp/images/image.png");
   min-height: 100vh;
   display: flex;
   flex-direction: column;

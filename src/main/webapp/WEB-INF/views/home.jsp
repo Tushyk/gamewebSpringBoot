@@ -1,32 +1,29 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:include page="header.jsp"/>
+<jsp:include page="admin/header.jsp"/>
 <section class="padding-large bg-light">
     <div id="carouselExampleControls" class="carousel slide main-slider" data-ride="carousel">
         <div class="carousel-inner container">
             <div class="carousel-item active">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
-                        <h1>Lorem ipsum dolor sit amet</h1>
-                        <h3> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                            magna aliqua.</h3>
+                        <h1>You will see top games in the world</h1>
+                        <h3> all games on all available platforms develop by amazing publishers</h3>
                     </div>
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
-                        <h1>Torem ipsum dolor sit amet</h1>
-                        <h3> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                            magna aliqua.</h3>
+                        <h1>Get knowledge about upcoming premieres</h1>
+                        <h3> news and articles about publishers, developers</h3>
                     </div>
                 </div>
             </div>
             <div class="carousel-item">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
-                        <h1>Borem ipsum dolor sit amet</h1>
-                        <h3> consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                            magna aliqua.</h3>
+                        <h1>search any games in our amazing games database</h1>
+                        <h3> You will find any game at any category or year release</h3>
                     </div>
                 </div>
             </div>
@@ -120,4 +117,4 @@
         </div>
     </div>
 </section>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="admin/footer.jsp"/>

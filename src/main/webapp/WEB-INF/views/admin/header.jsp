@@ -20,17 +20,19 @@
             game <span>web</span>
         </a>
         <ul class="nav nounderline text-uppercase">
+            <sec:authorize access="!isAuthenticated()">
+                <li class="nav-item ml-4">
+                    <a class="nav-link color-header" href="${pageContext.request.contextPath}/login">log in</a>
+                </li>
+                <li class="nav-item ml-4">
+                    <a class="nav-link color-header" href="${pageContext.request.contextPath}/register">register</a>
+                </li>
+            </sec:authorize>
             <li class="nav-item ml-4">
-                <a class="nav-link color-header" href="${pageContext.request.contextPath}/login">log in</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/user-list">users</a>
             </li>
             <li class="nav-item ml-4">
-                <a class="nav-link color-header" href="${pageContext.request.contextPath}/register">register</a>
-            </li>
-            <li class="nav-item ml-4">
-                <a class="nav-link" href="${pageContext.request.contextPath}/aboutApp">users</a>
-            </li>
-            <li class="nav-item ml-4">
-                <a class="nav-link disabled" href="${pageContext.request.contextPath}/allRecipes">Top games list</a>
+                <a class="nav-link disabled" href="${pageContext.request.contextPath}/game-list">Top games list</a>
             </li>
             <sec:authorize access="isAuthenticated()">
                 <li class="nav-item ml-4">
