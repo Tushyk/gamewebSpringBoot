@@ -3,9 +3,7 @@ package pl.kacper.gamewebspringboot.game;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import pl.kacper.gamewebspringboot.discussion.DiscussionRepository;
 import pl.kacper.gamewebspringboot.rating.Rating;
 import pl.kacper.gamewebspringboot.rating.RatingRepository;
@@ -29,6 +27,11 @@ public class GameController {
         model.addAttribute("games", gameRepository.findAll());
         return "game/list";
     }
+    @GetMapping("/gameList")
+    public String gameDetails(@RequestParam String title) {
+        return "redirect:/game-details/" + gameRepository.findGameByTitleIgnoreCase(title).getId();
+    }
+
     @GetMapping("/game-details/{id}")
     public String details(Model model, @PathVariable Long id) {
         model.addAttribute("game", gameRepository.findById(id).orElseThrow(EntityNotFoundException::new));
@@ -44,7 +47,7 @@ public class GameController {
         rating.setUser(user.getUser());
         ratingRepository.save(rating);
         model.addAttribute("rating", rating);
-        return "redirect:/game-details";
+        return "redirect:/game-details/" + id;
     }
 
 }

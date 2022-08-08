@@ -14,9 +14,9 @@
 <section class="dashboard-section">
   <div class="row dashboard-nowrap">
     <div class="m-4 p-3 width-medium">
-      <form method="POST" class="padding-small text-center">
+      <form action="/gameList" class="padding-small text-center">
         <div class="form-group">
-          <input type="text" class="form-control" id="name" name="name" placeholder="give game title">
+          <input type="text" class="form-control" id="title" name="title" placeholder="give game title">
         </div>
         <button class="btn btn-color rounded-0" type="submit">search</button>
       </form>

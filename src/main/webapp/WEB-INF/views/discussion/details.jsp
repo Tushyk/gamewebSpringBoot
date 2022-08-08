@@ -16,11 +16,11 @@
 <body>
 <h1>${discussion.game.title}</h1>
 <h2>Topic: ${discussion.topic} user: ${discussion.user.username}</h2>
-<table>
+<table border="1">
     <tbody>
     <c:forEach items="${comments}" var="comment">
         <tr>
-            <td><c:out value="${comment.user.username}-----created: ${comment.createdOn}"/></td>
+            <td><c:out value="${comment.user.username}-----created: ${comment.createdOn.toLocalDate()}-----time:${comment.createdOn.toLocalTime()}"/></td>
         </tr>
         <tr>
             <td><c:out value="${comment.text}"/></td>
@@ -39,7 +39,7 @@
 add comment
 <form:form method="post" action="/discussion/details/${discussion.id}" modelAttribute="comment" cssClass="some-class">
     <form:hidden path="id"/>
-    <form:textarea path="text"/>
+    <form:textarea path="text" />
     <form:errors path="text"/>
     <input type="submit"/>
 </form:form>
