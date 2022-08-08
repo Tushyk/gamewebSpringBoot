@@ -9,6 +9,7 @@ import pl.kacper.gamewebspringboot.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,4 +26,16 @@ public class Discussion {
     private User user;
     @ManyToOne
     private Game game;
+    @Column(name = "created")
+    private LocalDateTime createdOn;
+    @Column(name = "updated")
+    private LocalDateTime updatedOn;
+    @PrePersist
+    public void prePersist() {
+        createdOn = LocalDateTime.now();
+    }
+    @PreUpdate
+    public void preUpdate() {
+        updatedOn = LocalDateTime.now();
+    }
 }

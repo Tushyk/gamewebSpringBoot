@@ -36,7 +36,7 @@
             </li>
             <sec:authorize access="isAuthenticated()">
                 <li class="nav-item ml-4">
-                    <a class="nav-link disabled" href="${pageContext.request.contextPath}/admin/test"><sec:authentication property="principal.username"/></a>
+                    <a class="nav-link disabled" href="${pageContext.request.contextPath}/admin"><sec:authentication property="principal.username"/></a>
                 </li>
                 <li>
                     <form action="<c:url value="/logout"/>" method="post">

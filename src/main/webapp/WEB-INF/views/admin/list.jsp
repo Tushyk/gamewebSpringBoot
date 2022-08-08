@@ -30,23 +30,14 @@
             <th scope="col" class="col-1">username</th>
             <th scope="col" class="col-2">number of rated games</th>
             <th scope="col" class="col-2">number of created discussions</th>
-            <sec:authorize access="isAuthenticated()">
-              <th scope="col" class="col-3">action</th>
-            </sec:authorize>
           </tr>
           </thead>
           <tbody class="text-color-lighter">
           <c:forEach items="${users}" var="user">
             <tr>
-              <td><a class="nav-link color-header" href="game-details/${user.id}">${user.username}</a></td>
+              <td><a class="nav-link color-header" href="user-account/${user.id}">${user.username}</a></td>
               <td>tu pomyslec jak obliczyc liczbe gier</td>
               <td>tu pomyslec jak obliczyc liczbe dyskusji</td>
-              <sec:authorize access="isAuthenticated()">
-                <td>
-                  <a href="<c:url value="/article-form/confirm-delete/${game.id}"/>">delete</a>
-                  <a href="<c:url value="/article-form/update/${game.id}"/>">update</a>
-                </td>
-              </sec:authorize>
             </tr>
           </c:forEach>
           </tbody>

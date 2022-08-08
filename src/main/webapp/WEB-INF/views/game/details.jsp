@@ -1,72 +1,109 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: kacper
-  Date: 05.08.2022
-  Time: 22:30
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-<a href="<c:url value="/game-list"/>">return</a>
-<table border="1">
-    <thead>
-    <th>title</th>
-    <th>released date</th>
-    <th>genre</th>
-    <th>publisher</th>
-    </thead>
-    <tbody>
-    <tr>
-        <td><c:out value="${game.title}"/></td>
-        <td><c:out value="${game.releaseDate}"/></td>
-        <td><c:out value="${game.genre.name}"/></td>
-        <td><c:out value="${game.publisher.name}"/></td>
-    </tr>
-    </tbody>
-</table>
-<table border="1">
-    <tr>
-        <th>available platforms</th>
-    </tr>
-    <c:forEach items="${game.platforms}" var="platform">
-        <tr>
-            <td>${platform.name}</td>
-        </tr>
-    </c:forEach>
-</table>
-<sec:authorize access="isAuthenticated()">
-    how would you rate a game:
-    <form action="/game-rating/${game.id}">
-        <input type="number" min="1" max="10" name="rate" id="rate">
-        <input type="submit"/>
-    </form>
-</sec:authorize>
-<h4>Discussions</h4>
-<sec:authorize access="isAuthenticated()">
-    <a href="<c:url value="/admin/add-discussion/${game.id}"/>">create discussion</a>
-</sec:authorize>
-<table>
-<tbody>
-<c:forEach items="${discussions}" var="discussion">
-    <tr>
-        <td><c:out value="discussion created by ${discussion.user.username}:"/></td>
-        <td><a href="<c:url value="/discussion/details/${discussion.id}"/>"><c:out value="${discussion.topic}"/></a></td>
-    </tr>
-    <tr>
-        <sec:authorize access="isAuthenticated()">
-            <td>
-                <a href="<c:url value="/article-form/confirm-delete/${game.id}"/>">delete</a>
-            </td>
-        </sec:authorize>
-    </tr>
-</c:forEach>
-</tbody>
-</table>
-</body>
-</html>
+<jsp:include page="header.jsp"/>
+<section class="dashboard-section">
+    <div class="row dashboard-nowrap">
+        <div class="m-4 p-3 width-medium text-color-darker">
+            <div class="dashboard-content border-dashed p-3 m-4 view-height">
+                <div class="mt-4 ml-4 mr-4">
+                    <div class="row border-bottom border-3">
+                        <div class="col"><h3 class="color-header text-uppercase">Game details</h3></div>
+                        <div class="col d-flex justify-content-end mb-2"><a href="javascript:history.back()" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Powrót</a></div>
+                    </div>
+
+                    <table class="table borderless">
+                        <tbody>
+                        <tr class="d-flex">
+                            <th scope="row" class="col-2">Title</th>
+                            <td class="col-7">
+                                <c:out value="${game.title}"/>
+                            </td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th scope="row" class="col-2">Genre</th>
+                            <td class="col-7"><c:out value="${game.genre.name}"/></td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th scope="row" class="col-2">Release date</th>
+                            <td class="col-7">
+                                <c:out value="${game.releaseDate}"/>
+                            </td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th scope="row" class="col-2">Publisher</th>
+                            <td class="col-7">
+                                <c:out value="${game.publisher.name}"/>
+                            </td>
+                        </tr>
+                        <sec:authorize access="isAuthenticated()">
+                        <tr class="d-flex">
+                            <th scope="row" class="col-2">your rate</th>
+                            <td class="col-7">
+                                <c:out value="${rating.rating}"/>
+                            </td>
+                        </tr>
+                        </sec:authorize>
+                        <tr class="d-flex">
+                            <th scope="row" class="col-2">Average rate</th>
+                            <td class="col-7">
+                                <c:out value="${avgRate}"/>
+                            </td>
+                        </tr>
+                        <sec:authorize access="isAuthenticated()">
+                        <tr class="d-flex">
+                            <th scope="row" class="col-2">rate game</th>
+                            <td class="col-7">
+                                    how would you rate a game:
+                                    <form action="/game-rating/${game.id}">
+                                        <input type="number" min="1" max="10" name="rate" id="rate">
+                                        <input type="submit"/>
+                                    </form>
+                            </td>
+                        </tr>
+                        </sec:authorize>
+                        </tbody>
+                    </table>
+                    <div class="row d-flex">
+                        <div class="col-5 border-bottom border-3"><h3 class="text-uppercase">Description</h3></div>
+                        <div class="col-2"></div>
+                        <div class="col-5 border-bottom border-3"><h3 class="text-uppercase">platforms</h3></div>
+                    </div>
+                    <div class="row d-flex">
+                        <div class="col-5 p-4">
+                            <p>tutaj dodac opis</p>
+                        </div>
+                        <div class="col-2"></div>
+                        <ul class="col-5 p-4 list-unstyled">
+                            <c:forEach items="${game.platforms}" var="platform">
+                                <li>${platform.name}</li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                        <h4>Discussions</h4>
+                        <sec:authorize access="isAuthenticated()">
+                            <a href="<c:url value="/admin/add-discussion/${game.id}"/>">create discussion</a>
+                        </sec:authorize>
+                        <table border="1">
+                            <tbody>
+                            <c:forEach items="${discussions}" var="discussion">
+                                <tr>
+                                    <td><c:out value="discussion created by ${discussion.user.username}:"/></td>
+                                    <td><a href="<c:url value="/discussion/details/${discussion.id}"/>"><c:out value="${discussion.topic}"/></a></td>
+                                </tr>
+                                <tr>
+                                    <sec:authorize access="isAuthenticated()">
+                                        <td>
+                                            <a href="<c:url value="/article-form/confirm-delete/${game.id}"/>">delete</a>
+                                        </td>
+                                    </sec:authorize>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<jsp:include page="footer.jsp"/>

@@ -11,6 +11,7 @@ import pl.kacper.gamewebspringboot.user.CurrentUser;
 
 import javax.persistence.EntityNotFoundException;
 
+
 @Controller
 public class GameController {
     private final GameRepository gameRepository;
@@ -24,7 +25,8 @@ public class GameController {
     }
     @GetMapping("/game-list")
     public String list(Model model) {
-        model.addAttribute("games", gameRepository.findAll());
+        model.addAttribute("ratings", ratingRepository.findRatingsOrdered());
+
         return "game/list";
     }
     @GetMapping("/gameList")
@@ -33,21 +35,36 @@ public class GameController {
     }
 
     @GetMapping("/game-details/{id}")
-    public String details(Model model, @PathVariable Long id) {
+    public String details(Model model, @PathVariable Long id, @AuthenticationPrincipal CurrentUser user) {
         model.addAttribute("game", gameRepository.findById(id).orElseThrow(EntityNotFoundException::new));
         model.addAttribute("discussions", discussionRepository.findDiscussionsByGame_Id(id));
+        if (user != null) {
+            model.addAttribute("rating", ratingRepository.findRatingByUser_IdAndAndGame_Id(user.getUser().getId(), id));
+        }
+        model.addAttribute("avgRate", ratingRepository.getAvgRating(id));
         return "game/details";
     }
     @GetMapping("/game-rating/{id}")
     public String rating(@RequestParam String rate, @PathVariable Long id, @AuthenticationPrincipal CurrentUser user, Model model) {
-        Rating rating = new Rating();
-        double _rate = Double.parseDouble(rate);
-        rating.setRating(_rate);
-        rating.setGame(gameRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        rating.setUser(user.getUser());
+        if (ratingRepository.findRatingByUser_IdAndAndGame_Id(user.getUser().getId(), id) == null) {
+            Rating rating = new Rating();
+            double _rate = Double.parseDouble(rate);
+            rating.setRating(_rate);
+            rating.setGame(gameRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+            rating.setUser(user.getUser());
+            ratingRepository.save(rating);
+            return "redirect:/game-details/" + id;
+        } else {
+            model.addAttribute("rating", ratingRepository.findRatingByUser_IdAndAndGame_Id(user.getUser().getId(), id));
+            return "game/rating-edit";
+        }
+    }
+    @GetMapping("/rating-update/{id}")
+    public String updateRating(@PathVariable Long id, @RequestParam String rate){
+        Rating rating = ratingRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        rating.setRating(Double.parseDouble(rate));
         ratingRepository.save(rating);
-        model.addAttribute("rating", rating);
-        return "redirect:/game-details/" + id;
+        return "redirect:/game-details/" + rating.getGame().getId();
     }
 
 }

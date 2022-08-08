@@ -29,22 +29,14 @@
           <tr class="text-color-darker">
             <th scope="col" class="col-1">title</th>
             <th scope="col" class="col-2">rating</th>
-            <sec:authorize access="isAuthenticated()">
-              <th scope="col" class="col-3">action</th>
-            </sec:authorize>
+            <th scope="col" class="col-2">popularity</th>
           </tr>
           </thead>
           <tbody class="text-color-lighter">
-          <c:forEach items="${games}" var="game">
+          <c:forEach items="${ratings}" var="rating">
             <tr>
-              <td><a class="nav-link color-header" href="game-details/${game.id}">${game.title}</a></td>
-              <td>tu pomyslec jak obliczyc ocene</td>
-              <sec:authorize access="isAuthenticated()">
-                <td>
-                  <a href="<c:url value="/article-form/confirm-delete/${game.id}"/>">delete</a>
-                  <a href="<c:url value="/article-form/update/${game.id}"/>">update</a>
-                </td>
-              </sec:authorize>
+              <td><a class="nav-link color-header" href="game-details/${rating.game.id}">${rating.game.title}</a></td>
+              <td>${rating.rating}</td>
             </tr>
           </c:forEach>
           </tbody>
