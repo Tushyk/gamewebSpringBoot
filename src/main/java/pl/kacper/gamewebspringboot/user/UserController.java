@@ -56,6 +56,14 @@ public class UserController {
         model.addAttribute("users", userRepository.findAll());
         return "admin/list";
     }
+    @GetMapping("/userList")
+    public String gameDetails(@RequestParam String name) {
+        if (userRepository.findByUsername(name) == null) {
+            return "redirect:/user-list";
+        } else {
+            return "redirect:/user-account/" + userRepository.findByUsername(name).getId();
+        }
+    }
     @GetMapping("/admin")
     public String userAuthentication(Model model, @AuthenticationPrincipal CurrentUser user) {
         return "redirect:/user-account/" + user.getUser().getId();

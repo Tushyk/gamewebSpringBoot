@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<jsp:include page="admin/header.jsp"/>
+<jsp:include page="parts/header.jsp"/>
 <section class="padding-large bg-light">
     <div id="carouselExampleControls" class="carousel slide main-slider" data-ride="carousel">
         <div class="carousel-inner container">
@@ -117,4 +117,4 @@
         </div>
     </div>
 </section>
-<jsp:include page="admin/footer.jsp"/>
+<jsp:include page="parts/footer.jsp"/>

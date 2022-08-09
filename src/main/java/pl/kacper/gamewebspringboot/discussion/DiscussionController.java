@@ -16,6 +16,7 @@ import pl.kacper.gamewebspringboot.user.UserService;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.awt.print.Book;
+import java.util.Objects;
 
 @Controller
 public class DiscussionController {
@@ -49,13 +50,16 @@ public class DiscussionController {
         discussion.setUser(user.getUser());
         discussion.setGame(gameRepository.findById(id).orElseThrow(EntityNotFoundException::new));
         discussionRepository.save(discussion);
-        return "redirect:/game-list";
+        return "redirect:/game-details/" + id;
     }
     @GetMapping("/discussion/details/{id}")
-    public String show(Model model, @PathVariable long id) {
+    public String show(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser user) {
         model.addAttribute("discussion", discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new));
         model.addAttribute("comments", commentRepository.findAllByDiscussion_IdOrderByCreatedOn(id));
         model.addAttribute("comment", new Comment());
+        if (user != null) {
+            model.addAttribute("currentUser", user.getUser());
+        }
         return "discussion/details";
     }
     @PostMapping("/discussion/details/{id}")
@@ -68,5 +72,33 @@ public class DiscussionController {
         commentRepository.save(comment);
         return "redirect:/discussion/details/" + id;
     }
-
+    @GetMapping("admin/discussion/confirm-delete/{id}")
+    public String confirm(Model model, @PathVariable long id) {
+        Discussion discussion = discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        model.addAttribute("gameId", discussion.getGame().getId());
+        model.addAttribute("discussionId", discussion.getId());
+        return "discussion/confirmDelete";
+    }
+    @GetMapping("admin/discussion/delete/{id}")
+    public String delete( @PathVariable long id, @AuthenticationPrincipal CurrentUser user) {
+        Discussion discussion = discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if (Objects.equals(discussion.getUser().getId(), user.getUser().getId())){
+            commentRepository.deleteAllByDiscussion_Id(id);
+            return "redirect:/discussion/details/" + id;
+        }
+        return "redirect:/admin/books/all";
+    }
+    @GetMapping("/admin/discussion/edit/{id}")
+    public String edit(Model model, @PathVariable long id) {
+        model.addAttribute("discussion", discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        return "discussion/edit";
+    }
+    @PostMapping("admin/discussion/update")
+    public String update(@Valid Discussion discussion, BindingResult result) {
+        if (result.hasErrors()){
+            return "discussion/edit";
+        }
+        discussionRepository.save(discussion);
+        return "redirect:/discussion/details/" + discussion.getId();
+    }
 }

@@ -8,4 +8,5 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByDiscussion_IdOrderByCreatedOn(Long discussionId);
+    void deleteAllByDiscussion_Id(Long discussionId);
 }

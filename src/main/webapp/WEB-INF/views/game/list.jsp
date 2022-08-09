@@ -2,7 +2,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<jsp:include page="header.jsp"/>
+<jsp:include page="../parts/header.jsp"/>
 <section>
   <div class="row padding-small" style="margin: 0">
     <i class="fas fa-users icon-users"></i>
@@ -33,10 +33,11 @@
           </tr>
           </thead>
           <tbody class="text-color-lighter">
-          <c:forEach items="${ratings}" var="rating">
+          <c:forEach items="${games}" var="game">
             <tr>
-              <td><a class="nav-link color-header" href="game-details/${rating.game.id}">${rating.game.title}</a></td>
-              <td>${rating.rating}</td>
+              <td><a class="nav-link color-header" href="game-details/${game.id}">${game.title}</a></td>
+              <td>${game.avgRating}</td>
+              <td>${game.numberOfRatings}</td>
             </tr>
           </c:forEach>
           </tbody>
@@ -45,4 +46,4 @@
     </div>
   </div>
 </section>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../parts/footer.jsp"/>

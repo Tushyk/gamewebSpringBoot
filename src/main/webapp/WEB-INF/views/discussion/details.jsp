@@ -3,7 +3,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<jsp:include page="header.jsp"/>
+<jsp:include page="../parts/header.jsp"/>
 <section>
     <div class="row padding-small" style="margin: 0">
         <i class="fas fa-users icon-users"></i>
@@ -28,11 +28,14 @@
                         <tr>
                             <td><c:out value="${comment.text}"/></td>
 
-                            <sec:authorize access="isAuthenticated()">
+                            <c:if test="${comment.user.id == currentUser.id}">
                                 <td>
-                                    <a href="<c:url value="/article-form/confirm-delete/${comment.id}"/>">delete</a>
+                                    <a href="<c:url value="/admin/comment/confirm-delete/${comment.id}"/>">delete</a>
                                 </td>
-                            </sec:authorize>
+                                <td>
+                                    <a href="<c:url value="/admin/comment/edit/${comment.id}"/>">edit</a>
+                                </td>
+                            </c:if>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -50,4 +53,4 @@
         </div>
     </div>
 </section>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../parts/footer.jsp"/>

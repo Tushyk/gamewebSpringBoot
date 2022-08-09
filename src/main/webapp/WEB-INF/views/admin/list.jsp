@@ -2,7 +2,7 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
-<jsp:include page="header.jsp"/>
+<jsp:include page="../parts/header.jsp"/>
 <section>
   <div class="row padding-small" style="margin: 0">
     <i class="fas fa-users icon-users"></i>
@@ -14,7 +14,7 @@
 <section class="dashboard-section">
   <div class="row dashboard-nowrap">
     <div class="m-4 p-3 width-medium">
-      <form method="POST" class="padding-small text-center">
+      <form action="/userList" class="padding-small text-center">
         <div class="form-group">
           <input type="text" class="form-control" id="name" name="name" placeholder="type user to find">
         </div>
@@ -46,4 +46,4 @@
     </div>
   </div>
 </section>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../parts/footer.jsp"/>

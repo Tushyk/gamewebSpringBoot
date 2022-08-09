@@ -35,5 +35,7 @@ public class Game {
     private Genre genre;
     @ManyToMany
     private List<Platform> platforms = new ArrayList<>();
+    private Double avgRating;
+    private Long numberOfRatings;
 
 }

@@ -14,4 +14,8 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
     Double getAvgRating(@Param("id") Long gameId);
     @Query("select r from Rating r order by r.rating desc")
     List<Rating> findRatingsOrdered();
+    @Query("select count(r.rating) from Rating r where r.game.id = :id")
+    Long numberOfRatingsPerGame(@Param("id") Long gameId);
+    @Query("select count(r.rating) from Rating r where r.user.id = :id")
+    Long numberOfRatingsPerUser(@Param("id") Long userId);
 }
