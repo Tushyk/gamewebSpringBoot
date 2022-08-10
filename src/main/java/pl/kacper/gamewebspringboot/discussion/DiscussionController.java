@@ -55,7 +55,7 @@ public class DiscussionController {
     @GetMapping("/discussion/details/{id}")
     public String show(Model model, @PathVariable long id, @AuthenticationPrincipal CurrentUser user) {
         model.addAttribute("discussion", discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        model.addAttribute("comments", commentRepository.findAllByDiscussion_IdOrderByCreatedOn(id));
+        model.addAttribute("comments", commentRepository.findAllByDiscussion_Id(id));
         model.addAttribute("comment", new Comment());
         if (user != null) {
             model.addAttribute("currentUser", user.getUser());

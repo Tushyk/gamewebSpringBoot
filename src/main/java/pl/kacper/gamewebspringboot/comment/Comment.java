@@ -24,17 +24,9 @@ public class Comment {
     private String text;
     @Column(name = "created")
     private LocalDateTime createdOn;
-    @Column(name = "updated")
-    private LocalDateTime updatedOn;
-
     @PrePersist
     public void prePersist() {
         createdOn = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        updatedOn = LocalDateTime.now();
     }
     @ManyToOne
     private User user;
