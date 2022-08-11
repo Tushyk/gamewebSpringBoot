@@ -11,11 +11,12 @@ import pl.kacper.gamewebspringboot.comment.Comment;
 import pl.kacper.gamewebspringboot.comment.CommentRepository;
 import pl.kacper.gamewebspringboot.game.GameRepository;
 import pl.kacper.gamewebspringboot.user.CurrentUser;
+import pl.kacper.gamewebspringboot.user.UserRepository;
 import pl.kacper.gamewebspringboot.user.UserService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
-import java.awt.print.Book;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Controller
@@ -24,15 +25,18 @@ public class DiscussionController {
     private final GameRepository gameRepository;
     private final CommentRepository commentRepository;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     public DiscussionController(DiscussionRepository discussionRepository,
                                 GameRepository gameRepository,
                                 CommentRepository commentRepository,
-                                UserService userService) {
+                                UserService userService,
+                                UserRepository userRepository) {
         this.discussionRepository = discussionRepository;
         this.gameRepository = gameRepository;
         this.commentRepository = commentRepository;
         this.userService = userService;
+        this.userRepository = userRepository;
     }
     @GetMapping("/admin/add-discussion/{id}")
     public String add(Model model, @PathVariable Long id) {
@@ -50,6 +54,8 @@ public class DiscussionController {
         discussion.setUser(user.getUser());
         discussion.setGame(gameRepository.findById(id).orElseThrow(EntityNotFoundException::new));
         discussionRepository.save(discussion);
+        user.getUser().setNumberOfDiscussions(discussionRepository.countDiscussionsByUser_Id(user.getUser().getId()));
+        userRepository.save(user.getUser());
         return "redirect:/game-details/" + id;
     }
     @GetMapping("/discussion/details/{id}")
@@ -69,6 +75,7 @@ public class DiscussionController {
         }
         comment.setUser(user.getUser());
         comment.setDiscussion(discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        comment.setCreatedOn(LocalDateTime.now());
         commentRepository.save(comment);
         return "redirect:/discussion/details/" + id;
     }

@@ -1,6 +1,7 @@
 package pl.kacper.gamewebspringboot.user;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,17 +19,19 @@ public class UserController {
     private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
     private final DiscussionRepository discussionRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public UserController(UserService userService,
                           RoleRepository roleRepository,
                           UserRepository userRepository,
                           RatingRepository ratingRepository,
-                          DiscussionRepository discussionRepository) {
+                          DiscussionRepository discussionRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
         this.discussionRepository = discussionRepository;
+        this.passwordEncoder = passwordEncoder;
     }
     @GetMapping("/login")
     public String login() {
@@ -69,10 +72,56 @@ public class UserController {
         return "redirect:/user-account/" + user.getUser().getId();
     }
     @GetMapping("/user-account/{id}")
-    public String userAccount(@PathVariable Long id, Model model) {
+    public String userAccount(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
         model.addAttribute("user", userRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+        if (currentUser != null) {
+            model.addAttribute("currentUser", currentUser.getUser());
+        }
         model.addAttribute("discussions", discussionRepository.findDiscussionsByUser_Id(id));
         model.addAttribute("ratings", ratingRepository.findRatingsByUser_Id(id));
         return "admin/account";
     }
+    @GetMapping("/admin/account/edit")
+    public String edit(Model model, @AuthenticationPrincipal CurrentUser user) {
+        model.addAttribute("login", user.getUser().getUsername());
+        return "admin/edit";
+    }
+    @GetMapping("/admin/account/update")
+    public String update(@RequestParam String username, @AuthenticationPrincipal CurrentUser currentUser) {
+        currentUser.getUser().setUsername(username);
+        userRepository.save(currentUser.getUser());
+        return "redirect:/user-account/" + currentUser.getUser().getId();
+    }
+    @GetMapping("/admin/password/edit")
+    public String editPassword() {
+        return "admin/editPassword";
+    }
+    @GetMapping("/admin/password/update")
+    public String updatePassword(@RequestParam String oldPassword,
+                                 @RequestParam String newPassword,
+                                 @RequestParam String repeatPassword,
+                                 @AuthenticationPrincipal CurrentUser currentUser) {
+        if (newPassword.equals(repeatPassword) && passwordEncoder.matches(oldPassword, currentUser.getUser().getPassword())) {
+            currentUser.getUser().setPassword(newPassword);
+            userService.saveUser(currentUser.getUser());
+            return "redirect:/user-account/" + currentUser.getUser().getId();
+        } else {
+            return "redirect:/admin/password/edit";
+        }
+    }
+    @GetMapping("/super-admin/block-user/{id}")
+    public String blockUserAccount(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
+            User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+            user.setEnabled(0);
+            userRepository.save(user);
+            return "redirect:/user-list";
+    }
+    @GetMapping("/super-admin/unblock-user/{id}")
+    public String unblockUserAccount(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
+        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        user.setEnabled(1);
+        userRepository.save(user);
+        return "redirect:/user-list";
+    }
+    
 }

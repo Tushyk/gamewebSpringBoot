@@ -4,12 +4,23 @@
 <jsp:include page="../parts/header.jsp"/>
 <section class="dashboard-section">
     <div class="row dashboard-nowrap">
+        <c:if test="${user.id == currentUser.id}">
+            <jsp:include page="../parts/sidebar.jsp"/>
+        </c:if>
         <div class="m-4 p-3 width-medium text-color-darker">
             <div class="dashboard-content border-dashed p-3 m-4 view-height">
                 <div class="mt-4 ml-4 mr-4">
                     <div class="row border-bottom border-3">
                         <div class="col"><h3 class="color-header text-uppercase">${user.username}</h3></div>
                         <div class="col d-flex justify-content-end mb-2"><a href="javascript:history.back()" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">return</a></div>
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <c:if test="${user.enabled == 1}">
+                                <div class="col d-flex justify-content-end mb-2"><a href="/super-admin/block-user/${user.id}"  class="btn btn-danger rounded-0 pt-0 pb-0 pr-4 pl-4">block user</a></div>
+                            </c:if>
+                            <c:if test="${user.enabled == 0}">
+                                <div class="col d-flex justify-content-end mb-2"><a href="/super-admin/unblock-user/${user.id}"  class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">unblock user</a></div>
+                            </c:if>
+                        </sec:authorize>
                     </div>
                     <div class="row d-flex">
                         <div class="col-5 border-bottom border-3"><h3 class="text-uppercase">rated games</h3></div>

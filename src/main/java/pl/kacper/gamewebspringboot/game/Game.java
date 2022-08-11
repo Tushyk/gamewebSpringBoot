@@ -3,6 +3,7 @@ package pl.kacper.gamewebspringboot.game;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 import pl.kacper.gamewebspringboot.genre.Genre;
 import pl.kacper.gamewebspringboot.platform.Platform;
 import pl.kacper.gamewebspringboot.publisher.Publisher;
@@ -30,6 +31,7 @@ public class Game {
     private String title;
     @ManyToOne
     private Publisher publisher;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate releaseDate;
     @ManyToOne
     private Genre genre;

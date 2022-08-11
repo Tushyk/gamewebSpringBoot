@@ -12,6 +12,7 @@ import pl.kacper.gamewebspringboot.user.CurrentUser;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Controller
@@ -31,7 +32,7 @@ public class CommentController {
     @GetMapping("admin/comment/delete/{id}")
     public String deleteComment( @PathVariable long id, @AuthenticationPrincipal CurrentUser user) {
         Comment comment = commentRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        if (Objects.equals(comment.getUser().getId(), user.getUser().getId())){
+        if (Objects.equals(comment.getUser().getId(), user.getUser().getId()) || user.getUser().getId() == 1){
             commentRepository.delete(comment);
             return "redirect:/discussion/details/" + comment.getDiscussion().getId();
         }
@@ -47,6 +48,7 @@ public class CommentController {
         if (result.hasErrors()){
             return "comment/edit";
         }
+        comment.setUpdatedOn(LocalDateTime.now());
         commentRepository.save(comment);
         return "redirect:/discussion/details/" + comment.getDiscussion().getId();
     }

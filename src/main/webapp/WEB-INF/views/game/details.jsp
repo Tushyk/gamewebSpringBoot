@@ -9,7 +9,11 @@
                 <div class="mt-4 ml-4 mr-4">
                     <div class="row border-bottom border-3">
                         <div class="col"><h3 class="color-header text-uppercase">Game details</h3></div>
-                        <div class="col d-flex justify-content-end mb-2"><a href="javascript:history.back()" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">Powrót</a></div>
+                        <div class="col d-flex justify-content-end mb-2"><a href="javascript:history.back()" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">return</a></div>
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <td><a href="/super-admin/edit-game/${game.id}" class="btn btn-success rounded-0 text-light m-1">EDIT GAME</a></td>
+                            <td><a href="/super-admin/delete-game-confirm/${game.id}" class="btn btn-danger rounded-0 text-light m-1">DELETE GAME</a></td>
+                        </sec:authorize>
                     </div>
 
                     <table class="table borderless">

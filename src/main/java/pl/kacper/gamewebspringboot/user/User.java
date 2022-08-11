@@ -24,6 +24,10 @@ public class User {
     @NotBlank(message = "pole nie moze byc puste")
     private String password;
     private int enabled;
+    @Column(name = "rated_games")
+    private Long numberOfRatedGames;
+    @Column(name = "created_discussions")
+    private Long numberOfDiscussions;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Role> roles;
 }

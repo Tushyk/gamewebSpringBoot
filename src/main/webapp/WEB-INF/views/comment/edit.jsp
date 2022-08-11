@@ -21,6 +21,7 @@
   <form:errors path="text"/><br/>
   <form:hidden path="discussion"/>
   <form:hidden path="user"/>
+  <form:hidden path="createdOn"/>
   <input type="submit" value="Save">
 </form:form>
 </body>

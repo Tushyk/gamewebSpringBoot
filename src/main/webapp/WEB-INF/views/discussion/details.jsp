@@ -23,12 +23,17 @@
                     <tbody class="text-color-lighter">
                     <c:forEach items="${comments}" var="comment">
                         <tr>
-                            <td><c:out value="${comment.user.username}-----created: ${comment.createdOn.toLocalDate()}-----time:${comment.createdOn.toLocalTime()}"/></td>
+                            <td><c:out value="${comment.user.username}-----created:
+                             ${comment.createdOn.toLocalDate()}-----time:
+                             ${comment.createdOn.toLocalTime()}"/>
+                             <c:if test="${comment.updatedOn != null}">--------edited:
+                                 ${comment.updatedOn.toLocalDate()}------time: ${comment.updatedOn.toLocalTime()}</c:if>
+                            </td>
                         </tr>
                         <tr>
                             <td><c:out value="${comment.text}"/></td>
 
-                            <c:if test="${comment.user.id == currentUser.id}">
+                            <c:if test="${comment.user.id == currentUser.id || currentUser.id == 1}">
                                 <td>
                                     <a href="<c:url value="/admin/comment/confirm-delete/${comment.id}"/>">delete</a>
                                 </td>

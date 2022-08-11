@@ -11,7 +11,7 @@
                     <form:hidden path="id"/>
                     Enter your username<form:input path="username"  />
                     <form:errors path="username"/>
-                    Create password<form:input path="password" />
+                    Create password<form:input type="password" path="password" />
                     <form:errors path="password"/>
                     <input type="submit"/>
                 </form:form>
