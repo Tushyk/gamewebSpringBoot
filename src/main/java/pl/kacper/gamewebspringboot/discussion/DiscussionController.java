@@ -9,14 +9,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import pl.kacper.gamewebspringboot.comment.Comment;
 import pl.kacper.gamewebspringboot.comment.CommentRepository;
+import pl.kacper.gamewebspringboot.game.Game;
 import pl.kacper.gamewebspringboot.game.GameRepository;
 import pl.kacper.gamewebspringboot.user.CurrentUser;
 import pl.kacper.gamewebspringboot.user.UserRepository;
 import pl.kacper.gamewebspringboot.user.UserService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Controller
@@ -75,7 +78,7 @@ public class DiscussionController {
         }
         comment.setUser(user.getUser());
         comment.setDiscussion(discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new));
-        comment.setCreatedOn(LocalDateTime.now());
+        comment.setCreatedOn(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         commentRepository.save(comment);
         return "redirect:/discussion/details/" + id;
     }
@@ -87,11 +90,13 @@ public class DiscussionController {
         return "discussion/confirmDelete";
     }
     @GetMapping("admin/discussion/delete/{id}")
+    @Transactional
     public String delete( @PathVariable long id, @AuthenticationPrincipal CurrentUser user) {
         Discussion discussion = discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         if (Objects.equals(discussion.getUser().getId(), user.getUser().getId())){
             commentRepository.deleteAllByDiscussion_Id(id);
-            return "redirect:/discussion/details/" + id;
+            discussionRepository.delete(discussionRepository.findById(id).orElseThrow(EntityNotFoundException::new));
+            return "redirect:/game-details/" + discussion.getGame().getId();
         }
         return "redirect:/admin/books/all";
     }

@@ -64,6 +64,41 @@ public class GameController {
         } else if (genre.equals("default") && year.equals("default") && !platform.equals("default")) {
             model.addAttribute("games", gameRepository.findGamesByPlatform(Math.toIntExact(platformRepository.findPlatformByName(platform).getId())));
             model.addAttribute("platform", platformRepository.findPlatformByName(platform));
+        } else if (!genre.equals("default") && !year.equals("default") && platform.equals("default")) {
+            String begin = year + "0101";
+            int beginYear = Integer.parseInt(begin);
+            String end = year + "1224";
+            int endYear = Integer.parseInt(end);
+            int genreId = Math.toIntExact(genreRepository.findGenreByName(genre).getId());
+            model.addAttribute("games", gameRepository.findGamesByGenreAndDate(genreId, beginYear, endYear));
+            model.addAttribute("genre", genreRepository.findGenreByName(genre));
+            model.addAttribute("year", year);
+        } else if (!genre.equals("default") && year.equals("default") && !platform.equals("default")) {
+            int genreId = Math.toIntExact(genreRepository.findGenreByName(genre).getId());
+            int platformId = Math.toIntExact(platformRepository.findPlatformByName(platform).getId());
+            model.addAttribute("games", gameRepository.findGamesByGenreAndPlatform(genreId,platformId));
+            model.addAttribute("genre", genreRepository.findGenreByName(genre));
+            model.addAttribute("platform", platformRepository.findPlatformByName(platform));
+        } else if (genre.equals("default") && !year.equals("default") && !platform.equals("default")) {
+            String begin = year + "0101";
+            int beginYear = Integer.parseInt(begin);
+            String end = year + "1224";
+            int endYear = Integer.parseInt(end);
+            int platformId = Math.toIntExact(platformRepository.findPlatformByName(platform).getId());
+            model.addAttribute("games", gameRepository.findGamesByDateAndPlatform(beginYear, endYear, platformId));
+            model.addAttribute("year", year);
+            model.addAttribute("platform", platformRepository.findPlatformByName(platform));
+        } else if (!genre.equals("default") && !year.equals("default") && !platform.equals("default")) {
+            String begin = year + "0101";
+            int beginYear = Integer.parseInt(begin);
+            String end = year + "1224";
+            int endYear = Integer.parseInt(end);
+            int platformId = Math.toIntExact(platformRepository.findPlatformByName(platform).getId());
+            int genreId = Math.toIntExact(genreRepository.findGenreByName(genre).getId());
+            model.addAttribute("games", gameRepository.findGamesByGenreAndDateAndPlatform(genreId, beginYear, endYear, platformId));
+            model.addAttribute("year", year);
+            model.addAttribute("platform", platformRepository.findPlatformByName(platform));
+            model.addAttribute("genre", genreRepository.findGenreByName(genre));
         }
         return "game/list";
     }

@@ -13,6 +13,7 @@ import pl.kacper.gamewebspringboot.user.CurrentUser;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Controller
@@ -48,7 +49,7 @@ public class CommentController {
         if (result.hasErrors()){
             return "comment/edit";
         }
-        comment.setUpdatedOn(LocalDateTime.now());
+        comment.setUpdatedOn(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES));
         commentRepository.save(comment);
         return "redirect:/discussion/details/" + comment.getDiscussion().getId();
     }
