@@ -6,7 +6,7 @@
             <div class="carousel-item active">
                 <div class="container w-75 d-flex">
                     <div class="carousel-caption d-block">
-                        <h1>You will see top games in the world</h1>
+                        <h1>You will see top games in the world</h1></div>
                         <h3> all games on all available platforms develop by amazing publishers</h3>
                     </div>
                 </div>

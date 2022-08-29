@@ -1,35 +1,69 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: kacper
-  Date: 11.08.2022
-  Time: 13:19
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-<c:url var="edit_url" value="/super-admin/update-game"/>
-<form:form method="post" modelAttribute="game" cssClass="some-class" action="${edit_url}">
-    <form:hidden path="id"/>
-    <form:hidden path="avgRating"/>
-    <form:hidden path="numberOfRatings"/>
-    <form:input path="title"/>
-    <form:errors path="title"/>
-    <form:input type="date" path="releaseDate"/>
-    <form:errors path="releaseDate"/>
-    <form:select path="publisher">
-        <form:options items="${publishers}" itemLabel="name" itemValue="id"/>
-    </form:select>
-    <form:select path="genre">
-        <form:options items="${genres}" itemLabel="name" itemValue="id"/>
-    </form:select>
-    <form:checkboxes path="platforms" items="${platforms}" itemLabel="name" itemValue="id"/>
-    <input type="submit"/>
-</form:form>
-</body>
-</html>
+<jsp:include page="../parts/header.jsp"/>
+<section class="dashboard-section">
+    <div class="row dashboard-nowrap">
+        <div class="m-4 p-3 width-medium text-color-darker">
+            <div class="m-4 border-dashed view-height">
+                <div class="mt-4 ml-4 mr-4">
+                    <c:url var="edit_url" value="/super-admin/update-game"/>
+
+                    <form:form method="post" modelAttribute="game" cssClass="some-class" action="${edit_url}">
+                        <div class="row border-bottom border-3">
+                            <div class="col"><h3 class="color-header text-uppercase">add game</h3></div>
+                            <div class="col d-flex justify-content-end mb-2">
+                                <button type="submit" class="btn btn-color rounded-0 pt-0 pb-0 pr-4 pl-4">edit
+                                </button>
+                            </div>
+                        </div>
+                        <form:hidden path="id"/>
+                        <form:hidden path="avgRating"/>
+                        <form:hidden path="numberOfRatings"/>
+                        <table class="table borderless">
+                            <tbody>
+                            <tr class="d-flex">
+                                <th scope="row" class="col-2"><h4>title</h4></th>
+                                <td class="col-7">
+                                    <form:input path="title"/>
+                                    <form:errors path="title"/>
+                                </td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th scope="row" class="col-2"><h4>release date</h4></th>
+                                <td class="col-7">
+                                    <form:input type="date" path="releaseDate"/>
+                                    <form:errors path="releaseDate"/>
+                                </td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th scope="row" class="col-2"><h4>publisher</h4></th>
+                                <td class="col-7">
+                                    <form:select path="publisher">
+                                        <form:options items="${publishers}" itemLabel="name" itemValue="id"/>
+                                    </form:select>
+                                </td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th scope="row" class="col-2"><h4>genre</h4></th>
+                                <td class="col-7">
+                                    <form:select path="genre">
+                                        <form:options items="${genres}" itemLabel="name" itemValue="id"/>
+                                    </form:select>
+                                </td>
+                            </tr>
+                            <tr class="d-flex">
+                                <th scope="row" class="col-2"><h4>platforms</h4></th>
+                                <td class="col-7">
+                                    <<form:checkboxes path="platforms" items="${platforms}" itemLabel="name" itemValue="id"/>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form:form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<jsp:include page="../parts/footer.jsp"/>

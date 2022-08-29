@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import pl.kacper.gamewebspringboot.comment.CommentRepository;
+import pl.kacper.gamewebspringboot.discussion.Discussion;
 import pl.kacper.gamewebspringboot.discussion.DiscussionRepository;
 import pl.kacper.gamewebspringboot.genre.GenreRepository;
 import pl.kacper.gamewebspringboot.platform.PlatformRepository;
@@ -16,8 +18,9 @@ import pl.kacper.gamewebspringboot.user.UserRepository;
 import pl.kacper.gamewebspringboot.user.UserService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.awt.print.Book;
+import java.util.List;
 
 
 @Controller
@@ -30,8 +33,9 @@ public class GameController {
     private final GenreRepository genreRepository;
     private final PublisherRepository publisherRepository;
     private final PlatformRepository platformRepository;
+    private final CommentRepository commentRepository;
 
-    public GameController(GameRepository gameRepository, RatingRepository ratingRepository, DiscussionRepository discussionRepository, UserService userService, UserRepository userRepository, GenreRepository genreRepository, PublisherRepository publisherRepository, PlatformRepository platformRepository) {
+    public GameController(GameRepository gameRepository, RatingRepository ratingRepository, DiscussionRepository discussionRepository, UserService userService, UserRepository userRepository, GenreRepository genreRepository, PublisherRepository publisherRepository, PlatformRepository platformRepository, CommentRepository commentRepository) {
         this.gameRepository = gameRepository;
         this.ratingRepository = ratingRepository;
         this.discussionRepository = discussionRepository;
@@ -40,6 +44,7 @@ public class GameController {
         this.genreRepository = genreRepository;
         this.publisherRepository = publisherRepository;
         this.platformRepository = platformRepository;
+        this.commentRepository = commentRepository;
     }
     @GetMapping("/game-list")
     public String list(Model model) {
@@ -190,6 +195,26 @@ public class GameController {
         gameRepository.save(game);
         return "redirect:/game-details/" + game.getId();
     }
-
-
+    @GetMapping("super-admin/delete-game-confirm/{id}")
+    public String confirm(Model model, @PathVariable long id) {
+        Game game = gameRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        model.addAttribute("gameId", game.getId());
+        return "game/confirmDelete";
+    }
+    @GetMapping("super-admin/delete-game/{id}")
+    @Transactional
+    public String delete( @PathVariable long id, @AuthenticationPrincipal CurrentUser user) {
+        Game game = gameRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        if (user.getUser().getId() == 1){
+            List<Discussion> discussionList = discussionRepository.findDiscussionsByGame_Id(id);
+            for (Discussion discussion : discussionList) {
+                commentRepository.deleteAllByDiscussion_Id(discussion.getId());
+                discussionRepository.delete(discussion);
+            }
+            ratingRepository.deleteAllByGame_Id(game.getId());
+            gameRepository.delete(game);
+            return "redirect:/game-list/";
+        }
+        return "redirect:/admin/books/all";
+    }
 }

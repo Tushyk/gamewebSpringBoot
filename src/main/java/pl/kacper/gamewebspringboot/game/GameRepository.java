@@ -13,13 +13,13 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     //--------------------------------------------------FORMULARZ-------------------------------------------------------
     @Query(value = "select * from games join games_platforms gp on games.id = gp.game_id where games.genre_id= ?1 and games.release_date between ?2 and ?3 and gp.platforms_id=?4", nativeQuery = true)
     List<Game> findGamesByGenreAndDateAndPlatform(int genreId, int beginYear, int endYear, int platformId);
-    @Query(value = "select * from games join games_platforms gp on games.id = gp.game_id where games.genre_id= ?1", nativeQuery = true)
+    @Query(value = "select * from games where games.genre_id= ?1", nativeQuery = true)
     List<Game> findGamesByGenre(int genreId);
-    @Query(value = "select * from games join games_platforms gp on games.id = gp.game_id where games.release_date between ?1 and ?2", nativeQuery = true)
+    @Query(value = "select * from games where games.release_date between ?1 and ?2", nativeQuery = true)
     List<Game> findGamesByDate(int beginYear, int endYear);
     @Query(value = "select * from games join games_platforms gp on games.id = gp.game_id where gp.platforms_id=?1", nativeQuery = true)
     List<Game> findGamesByPlatform(int platformId);
-    @Query(value = "select * from games join games_platforms gp on games.id = gp.game_id where games.genre_id= ?1 and games.release_date between ?2 and ?3", nativeQuery = true)
+    @Query(value = "select * from games where games.genre_id= ?1 and games.release_date between ?2 and ?3", nativeQuery = true)
     List<Game> findGamesByGenreAndDate(int genreId, int beginYear, int endYear);
     @Query(value = "select * from games join games_platforms gp on games.id = gp.game_id where games.genre_id= ?1 and gp.platforms_id=?2", nativeQuery = true)
     List<Game> findGamesByGenreAndPlatform(int genreId, int platformId);

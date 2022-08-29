@@ -26,6 +26,12 @@
           <option value="default">default</option>
           <option value="rpg">rpg</option>
           <option value="fps">fps</option>
+          <option value="horror">horror</option>
+          <option value="sport">sport</option>
+          <option value="multiplayer">multiplayer</option>
+          <option value="logic">logic</option>
+          <option value="strategy">strategy</option>
+          <option value="slash">slash</option>
         </select>
         year: <select id="year" name="year">
           <option value="default">default</option>
@@ -57,6 +63,9 @@
           <option value="default">default</option>
           <option value="pc">pc</option>
           <option value="ps4">ps4</option>
+          <option value="ps5">ps5</option>
+          <option value="xbox">xbox</option>
+          <option value="nintendo">nintendo</option>
         </select>
         <input type="submit">
       </form>

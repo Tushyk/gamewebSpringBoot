@@ -102,8 +102,8 @@ public class UserController {
                                  @RequestParam String repeatPassword,
                                  @AuthenticationPrincipal CurrentUser currentUser) {
         if (newPassword.equals(repeatPassword) && passwordEncoder.matches(oldPassword, currentUser.getUser().getPassword())) {
-            currentUser.getUser().setPassword(newPassword);
-            userService.saveUser(currentUser.getUser());
+            currentUser.getUser().setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(currentUser.getUser());
             return "redirect:/user-account/" + currentUser.getUser().getId();
         } else {
             return "redirect:/admin/password/edit";

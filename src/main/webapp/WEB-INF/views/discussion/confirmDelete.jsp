@@ -1,19 +1,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%--
-  Created by IntelliJ IDEA.
-  User: kacper
-  Date: 09.08.2022
-  Time: 13:03
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Title</title>
-</head>
-<body>
-u sure want to delete this discussion?
-<a href="<c:url value="/admin/discussion/delete/${discussionId}"/>">delete</a> <br/>
-<a href="<c:url value="/game-details/${gameId}"/>">cancel</a> <br/>
-</body>
-</html>
+
+<jsp:include page="../parts/header.jsp"/>
+<section class="dashboard-section">
+    <div class="row dashboard-nowrap">
+        <div class="m-4 p-3 width-medium">
+            <div class="dashboard-content border-dashed p-3 m-4 view-height">
+                <div class="row border-bottom border-3 p-1 m-1">
+                    <form action="/app/recipe/delete" method="post">
+                        <div class="col noPadding"><h3 class="color-header text-uppercase">u sure want to delete this discussion?</h3></div>
+                        <a href="<c:url value="/admin/discussion/delete/${discussionId}"/>" class="btn btn-success rounded-0 pt-0 pb-0 pr-4 pl-4">delete</a>
+                        <a href="<c:url value="/game-details/${gameId}"/>" class="btn btn-danger rounded-0 pt-0 pb-0 pr-4 pl-4">cancel </a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<jsp:include page="../parts/footer.jsp"/>

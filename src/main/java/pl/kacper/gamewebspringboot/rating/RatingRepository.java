@@ -18,4 +18,5 @@ public interface RatingRepository extends JpaRepository<Rating, Long> {
     Long numberOfRatingsPerGame(@Param("id") Long gameId);
     @Query("select count(r.rating) from Rating r where r.user.id = :id")
     Long numberOfRatingsPerUser(@Param("id") Long userId);
+    void deleteAllByGame_Id(long gameId);
 }
