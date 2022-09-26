@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.AssertFalse;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
@@ -23,6 +24,9 @@ public class User {
     private String username;
     @NotBlank(message = "pole nie moze byc puste")
     private String password;
+    @Email
+    @Column(nullable = false, unique = true, length = 60)
+    private String email;
     private int enabled;
     @Column(name = "rated_games")
     private Long numberOfRatedGames;
