@@ -115,7 +115,7 @@ public class UserController {
     }
     @GetMapping("/user-list")
     public String list(Model model) {
-        model.addAttribute("users", userRepository.findAll());
+        model.addAttribute("users", userRepository.findUsersByRoleId());
         return "admin/list";
     }
     @GetMapping("/userList")
