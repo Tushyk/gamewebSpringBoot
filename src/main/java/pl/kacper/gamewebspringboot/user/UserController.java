@@ -170,17 +170,12 @@ public class UserController {
     }
     @GetMapping("/super-admin/block-user/{id}")
     public String blockUserAccount(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
-            User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-            user.setEnabled(0);
-            userRepository.save(user);
+            userService.blockUser(id);
             return "redirect:/user-list";
     }
     @GetMapping("/super-admin/unblock-user/{id}")
     public String unblockUserAccount(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
-        User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        user.setEnabled(1);
-        userRepository.save(user);
+        userService.unblockUser(id);
         return "redirect:/user-list";
     }
-    
 }
