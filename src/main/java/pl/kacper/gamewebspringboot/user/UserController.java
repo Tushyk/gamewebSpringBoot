@@ -64,7 +64,7 @@ public class UserController {
     public String save(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result, HttpServletRequest request) {
         if (result.hasErrors()){
             return "admin/registration";
-        } else if (Objects.equals(userDto.getPassword(), "Super@222")) {
+        } else if (Objects.equals(userDto.getPassword(), "Admin@222")) {
             userService.saveAdmin(userDto);
             return "admin/login";
         } else {
