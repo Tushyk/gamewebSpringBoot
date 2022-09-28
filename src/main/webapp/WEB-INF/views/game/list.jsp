@@ -23,15 +23,10 @@
       <h4>specify searching:</h4>
       <form class="padding-small text-left" action="/game-list-specify">
         genre: <select id="genre" name="genre">
-          <option value="default">default</option>
-          <option value="rpg">rpg</option>
-          <option value="fps">fps</option>
-          <option value="horror">horror</option>
-          <option value="sport">sport</option>
-          <option value="multiplayer">multiplayer</option>
-          <option value="logic">logic</option>
-          <option value="strategy">strategy</option>
-          <option value="slash">slash</option>
+        <option value="default">default</option>
+        <c:forEach items="${genres}" var="genre">
+          <option value="${genre.name}">${genre.name}</option>
+        </c:forEach>
         </select>
         year: <select id="year" name="year">
           <option value="default">default</option>
@@ -61,11 +56,9 @@
         </select>
         platform: <select id="platform" name="platform">
           <option value="default">default</option>
-          <option value="pc">pc</option>
-          <option value="ps4">ps4</option>
-          <option value="ps5">ps5</option>
-          <option value="xbox">xbox</option>
-          <option value="nintendo">nintendo</option>
+        <c:forEach items="${platforms}" var="platform">
+          <option value="${platform.name}">${platform.name}</option>
+        </c:forEach>
         </select>
         <input type="submit">
       </form>

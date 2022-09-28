@@ -50,6 +50,8 @@ public class GameController {
     public String list(Model model) {
         model.addAttribute("ratings", ratingRepository.findRatingsOrdered());
         model.addAttribute("games", gameRepository.findGamesOrdered());
+        model.addAttribute("genres", genreRepository.findAll());
+        model.addAttribute("platforms", platformRepository.findAll());
         return "game/list";
     }
     @GetMapping("/game-list-specify")
@@ -105,6 +107,8 @@ public class GameController {
             model.addAttribute("platform", platformRepository.findPlatformByName(platform));
             model.addAttribute("genre", genreRepository.findGenreByName(genre));
         }
+        model.addAttribute("genres", genreRepository.findAll());
+        model.addAttribute("platforms", platformRepository.findAll());
         return "game/list";
     }
     @GetMapping("/gameList")
