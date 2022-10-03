@@ -14,6 +14,7 @@
                     </div>
                     <button class="btn btn-color rounded-0" type="submit">Zaloguj</button>
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    <a href="/resetPassword" class="btn btn--small btn--without-border reset-password">Przypomnij hasło</a>
                 </form>
             </div>
         </div>

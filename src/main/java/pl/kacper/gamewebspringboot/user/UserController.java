@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import pl.kacper.gamewebspringboot.discussion.DiscussionRepository;
 import pl.kacper.gamewebspringboot.error.UserAlreadyExistException;
+import pl.kacper.gamewebspringboot.error.UserNotFoundException;
 import pl.kacper.gamewebspringboot.rating.RatingRepository;
 
 import javax.persistence.EntityNotFoundException;
@@ -177,5 +178,70 @@ public class UserController {
     public String unblockUserAccount(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
         userService.unblockUser(id);
         return "redirect:/user-list";
+    }
+    @GetMapping("/resetPassword")
+    public String resetPasswordForm() {
+        return "admin/reset-password";
+    }
+    @GetMapping("/resetPassword/sendingEmail")
+    public String resettingPassword(HttpServletRequest request, Model model,@RequestParam String email) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+        String appUrl = request.getContextPath();
+        String token = UUID.randomUUID().toString();
+        userService.createVerificationToken(user, token);
+
+        String recipientAddress = user.getEmail();
+        String subject = "Reset Password Confirmation";
+        String confirmationUrl = appUrl + "/resetPasswordConfirm?token=" + token;
+
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setFrom("konto.do.aplikacji.spring@gmail.com");
+        mail.setTo(recipientAddress);
+        mail.setSubject(subject);
+        mail.setText("\r\n" + "http://localhost:8080" + confirmationUrl);
+        mailSender.send(mail);
+
+        return "admin/confirm-resetPassword";
+    }
+    @GetMapping("/resetPasswordConfirm")
+    public String confirmResetPassword(WebRequest request, Model model, @RequestParam("token") String token){
+        Locale locale = request.getLocale();
+        VerificationToken verificationToken = userService.getVerificationToken(token);
+        if (verificationToken == null) {
+            return "redirect:/badpassword.html?lang=" + locale.getLanguage();
+        }
+        User user = verificationToken.getUser();
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            return "redirect:/dupabadUser.html?lang=" + locale.getLanguage();
+        }
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setUsername(user.getUsername());
+        model.addAttribute("user", userDto);
+        return "admin/reset-password-form";
+    }
+    @PostMapping("/resetPasswordConfirm")
+    public String confirmRegistration(@Valid @ModelAttribute("user") UserDto userDto, BindingResult result){
+        if (result.hasErrors()){
+            User user = userRepository.findById(userDto.getId()).orElseThrow(EntityNotFoundException::new);
+            VerificationToken token = tokenRepository.findByUser(user);
+            if (token != null) {
+                tokenRepository.delete(tokenRepository.findByUser(user));
+            }
+            return "admin/reset-password-form";
+        }
+        User user = userRepository.findById(userDto.getId()).orElseThrow(EntityNotFoundException::new);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        VerificationToken token = tokenRepository.findByUser(user);
+        if (token != null) {
+            tokenRepository.delete(tokenRepository.findByUser(user));
+        }
+        userRepository.save(user);
+        return "redirect:/login";
     }
 }
