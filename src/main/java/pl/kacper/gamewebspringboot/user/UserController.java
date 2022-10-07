@@ -143,14 +143,36 @@ public class UserController {
     }
     @GetMapping("/admin/account/edit")
     public String edit(Model model, @AuthenticationPrincipal CurrentUser user) {
-        model.addAttribute("login", user.getUser().getUsername());
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUser().getUsername());
+        userDto.setEmail(user.getUser().getEmail());
+        userDto.setId(user.getUser().getId());
+        model.addAttribute("loggedUser", userDto);
         return "admin/edit";
     }
-    @GetMapping("/admin/account/update")
-    public String update(@RequestParam String username, @AuthenticationPrincipal CurrentUser currentUser) {
-        currentUser.getUser().setUsername(username);
-        userRepository.save(currentUser.getUser());
-        return "redirect:/user-account/" + currentUser.getUser().getId();
+    @PostMapping("/admin/account/update")
+    public String update(@Valid @ModelAttribute("loggedUser") UserDto loggedUser, BindingResult result,
+                         @AuthenticationPrincipal CurrentUser currentUser, @RequestParam String oldPassword) {
+        if (result.hasErrors()){
+            return "admin/edit";
+        }
+        if (passwordEncoder.matches(oldPassword, currentUser.getUser().getPassword())) {
+            try {
+                userService.editUser(loggedUser);
+            } catch (UserAlreadyExistException uaeEx) {
+                String message = uaeEx.getMessage();
+                if (message.contains("konto o takim emailu juz isnieje:")) {
+                    result.rejectValue("email", "errors", message);
+                } else {
+                    result.rejectValue("username", "errors", message);
+                }
+                return "admin/edit";
+            }
+            return "redirect:/user-account/" + currentUser.getUser().getId();
+        } else {
+            result.rejectValue("id", "errors", "stare haslo dla konta jest nierpawidlowe");
+            return "admin/edit";
+        }
     }
     @GetMapping("/admin/password/edit")
     public String editPassword() {
