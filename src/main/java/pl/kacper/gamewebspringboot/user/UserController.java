@@ -174,23 +174,6 @@ public class UserController {
             return "admin/edit";
         }
     }
-    @GetMapping("/admin/password/edit")
-    public String editPassword() {
-        return "admin/editPassword";
-    }
-    @GetMapping("/admin/password/update")
-    public String updatePassword(@RequestParam String oldPassword,
-                                 @RequestParam String newPassword,
-                                 @RequestParam String repeatPassword,
-                                 @AuthenticationPrincipal CurrentUser currentUser) {
-        if (newPassword.equals(repeatPassword) && passwordEncoder.matches(oldPassword, currentUser.getUser().getPassword())) {
-            currentUser.getUser().setPassword(passwordEncoder.encode(newPassword));
-            userRepository.save(currentUser.getUser());
-            return "redirect:/user-account/" + currentUser.getUser().getId();
-        } else {
-            return "redirect:/admin/password/edit";
-        }
-    }
     @GetMapping("/super-admin/block-user/{id}")
     public String blockUserAccount(@PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
             userService.blockUser(id);

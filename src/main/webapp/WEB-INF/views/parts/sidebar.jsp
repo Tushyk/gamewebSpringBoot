@@ -9,12 +9,6 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="${pageContext.request.contextPath}/admin/password/edit">
-            <span>change password</span>
-            <i class="fas fa-angle-right"></i>
-        </a>
-    </li>
-    <li class="nav-item">
         <a class="nav-link" href="${pageContext.request.contextPath}/admin/confirm-delete-account">
             <span>delete account</span>
             <i class="fas fa-angle-right"></i>
